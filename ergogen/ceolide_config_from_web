@@ -1,3 +1,9 @@
+meta:
+  engine: 4.1.0
+  name: numsplay
+  version: 0.1
+  ref: "numsplay v0.1"
+
 units:
   # Proxy Spacing Variables
   kx: u
@@ -6,6 +12,27 @@ units:
   px: kx + 2
   py: ky + 2
   fillet_radius: 0.5
+
+  keycap_spacing: 0.5
+  # keycap size
+  kxy: 18
+  # switch cutout hole
+  kco: 14.4
+  # Screws
+  # M2 screws, flat head 4.1 mm
+  screw_radius: 1 + tolerance / 2
+  screw_diameter: 2 * screw_radius
+  screw_head_radius: 2.05
+  screw_head_diameter: 2 * screw_head_radius
+
+  # M2 standoffs, 4.2 + 0.2 mm
+  standoff_radius: 2.1 + tolerance / 2
+  standoff_diameter: 2 * standoff_radius
+  
+  # MCU
+  mcu_height: 33
+  mcu_width: 18
+
 points:
   zones:
     matrix:
@@ -89,6 +116,78 @@ points:
       rows:
         mod:
         bottom:
+ # mcu
+  mcu_center:
+    key.tags: [helper]
+    anchor:
+      ref: main_inner_top
+      shift: [-18.2, -13]
+
+  mcu_top_right:
+    key.tags: [helper]
+    anchor:
+      ref: mcu_center
+      shift: [mcu_width / 2, mcu_height / 2]
+
+  mcu_top_left:
+    key.tags: [helper]
+    anchor:
+      ref: mcu_center
+      shift: [mcu_width / -2, mcu_height / 2]
+
+  mcu_bottom_right:
+    key.tags: [helper]
+    anchor:
+      ref: mcu_top_right
+      shift: [0, -mcu_height]
+
+  mcu_bottom_left:
+    key.tags: [helper]
+    anchor:
+      ref: mcu_top_left
+      shift: [0, -mcu_height]
+
+  mcu_top_center:
+    key.tags: [helper]
+    anchor.aggregate.parts:
+      - mcu_top_left
+      - mcu_top_right
+
+  mcu_bottom_center:
+    key.tags: [helper]
+    anchor.aggregate.parts:
+      - mcu_bottom_left
+      - mcu_bottom_right
+
+  # connectors
+  display_header:
+    key.tags: [helper]
+    anchor:
+      ref: mcu_bottom_center
+      shift: [0, -2.6/2 - 1.85]
+
+  battery_connector:
+    key.tags: [helper]
+    anchor:
+      ref: mcu_center
+      shift: [-8.5, -28.25]
+      rotate: 0
+
+  # buttons
+  power_switch:
+    key.tags: [helper]
+    anchor:
+      ref: mcu_top_center
+      shift: [-2.5, 0.2]
+
+  reset_switch:
+    key.tags: [helper]
+    anchor:
+      ref: power_switch
+      shift: [9.05, -0.325]
+      rotate: 0
+
+
 outlines:
  # raw:
   #  - what: rectangle
