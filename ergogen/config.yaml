@@ -1,10 +1,8 @@
 meta:
   engine: 4.1.0
-  name: ouleetka
+  name: numsplay
   version: 0.1
-  ref: "ouleetka v0.1"
-  author: nxtk
-  url: https://github.com/nxtk/ouleetka
+  ref: "numsplay v0.1"
 
   footprints:
     #template: &kicad_template "kicad5"
@@ -23,11 +21,13 @@ meta:
     fill_zone: &fp_fill_zone "ceoloide/utility_filled_zone"
 
 units:
-  $default_autobind: 0
-  u: 0
-  U: 0
-  cx: 0
-  cy: 0
+  # Proxy Spacing Variables
+  kx: u
+  ky: u
+  # Padding Variables
+  px: kx + 2
+  py: ky + 2
+  fillet_radius: 0.5
 
   tolerance: 0.2
 
@@ -37,8 +37,8 @@ units:
 
   # 1u keycap higth and width
   # cherry: 18 x 18, choc: 16.5 x 17.5, CFX 16.5 x 16.5 (16.3-16.75)
-  kcy: 16.5
-  kcx: 16.5
+  kcy: 18
+  kcx: 18
 
   # spacing between switch centers for 1u keycaps
   kx: kcx + keycap_spacing
@@ -50,7 +50,7 @@ units:
   kcx125: kx * 1.25
 
   # switch cutout hole width; mx, choc v2: 14, choc v1: 13.8
-  kco: 13.8
+  kco: 14
 
   # M2 screws, flat head 4.1 mm
   screw_radius: 1 + tolerance / 2
@@ -69,32 +69,6 @@ units:
   # 180 - Hotswap south, led north, 0 - opposite
   switch_rotation: 180
 
-  # TODO: unused yet, cleanup later
-  # led_pos_x: 0 # Led X position relative to the switch center
-  # led_pos_y: 4.7 # Led Y position relative to the switch center
-  # led_rotation: 0 # Led rotation
-
-  # vertical_underglow_shift: -kx + 7.8 # How much to shift underglow leds tied to keys
-  # vertical_diode_shift: 1.5 # How much to shift to avoid overlap
-  # horizontal_diode_shift: -0.5 kco - 0.85
-
-  # diode_rotation: 0 # Diode rotation
-  # switch_rotation: 180 # Hotswap south, led north
-
-  # top_plate_thickness: 1.3
-  # internal_distance_to_top_plate: 2.2
-
-  # # Physical measures
-  # pwr_trace_width: 0.25 # 1A(0.25mm), 2A(0.8mm)
-  # gnd_trace_width: 0.25
-  # signal_trace_width: 0.15
-  # via_size: 0.56 # JLCPCB min 0.56 | KiCad default 0.8
-  # via_drill: 0.3 # JLCPCB min 0.3 | KiCad default 0.4
-
-  # case_wall_thickness: 0.5
-  # bottom_plate_thickness: 1.0
-  # internal_distance_to_bottom_plate: 4
-
 points.zones:
   main:
     anchor:
@@ -107,113 +81,78 @@ points.zones:
       padding: ky
       origin: [-0.5kx, -0.5ky]
     columns:
-      inner:
-        key:
-          column_net: C5
-        rows:
-          home:
-            tags:
-              led: true
-            led_prev: LED1
-            led_this: LED1_1
-            led_next: LED1_2
-      index.key.column_net: C4
-      middle:
-        key:
-          tags:
-            key125: true
-          column_net: C3
-          spread: 0.5kx + 0.5kx125 + 2
-          stagger: 7.425
-        rows:
-          home:
-            tags:
-              led: true
-            led_prev: LED1_1
-            led_this: LED1_2
-            led_next: LED1_3
-      ring:
-        key:
-          tags:
-            key125: true
-          column_net: C2
-          spread: kx125 + 0.75 #- 0.25
-          stagger: -1.65
-          splay: -2.5
-      pinky:
-        key:
-          column_net: C1
-          spread: kx + 3.5
-          stagger: -7.25
-          splay: -2.5
-        rows:
-          home:
-            tags:
-              led: true
-            led_prev: LED1_2
-            led_this: LED1_3
-            led_next: ''
-
-      outer:
-        key:
-          tags:
-            key125: true
-          column_net: C0
-          stagger: 6
-          spread: kx
-          padding: kcx125 + 0.5
-        rows:
-          top.skip: true
-          home.adjust.rotate: -90
-          bottom.adjust.rotate: -90
-    rows:
-      bottom.row_net: R2
-      home.row_net: R1
-      top.row_net: R0
-
-  thumb:
-    anchor:
-      ref: main_inner_bottom
-      shift: [-1.175kx, -1.8ky + 0.4]
-      rotate: 16
-    key:
-      tags: 
-        key: true
-      padding: kx
-      origin: [-0.5kx, -0.5ky]
-      rotate: 90
-    columns:
-      outer:
-        key:
-          tags:
-            led: true
-            key125: true
-          led_prev: LED0
-          led_this: LED0_1
-          led_next: LED0_2
-          column_net: C5
-      middle:
-        key:
-          tags:
-            led: true
-            key125: true
-          led_prev: LED0_1
-          led_this: LED0_2
-          led_next: ''
-          column_net: C4
-          stagger: 4
-          splay: -7
-          spread: ky + -0.2
-      inner:
-        key:
-          column_net: C3
-          stagger: 5.5
-          splay: -13
-          shift: [-0.85, -1]
-          spread: ky + 0.5
-          rotate: 180
-    rows:
-      default.row_net: R3
+    # hide first 2 nums 
+			outer:
+				rows.num.skip: true
+			pinky:
+				rows.num.skip: true
+				key: 
+					stagger: 1
+					spread: 1.0kx
+			ring:
+				key: 
+					stagger: 0.5kx
+					spread: 1.0kx
+					splay: -2
+			middle:  
+				key:
+					splay: -2
+					stagger: 0.6kx
+					spread: 1.0kx
+			index:
+				key:
+						splay: -2
+						stagger: -0.4kx
+			inner:
+				key:
+						splay: -1
+						stagger: -0.25kx
+		rows:
+		# 4 main 2 partial
+			bottom:
+			home:
+			top:
+			num:
+	cluster:
+		anchor:
+			ref: matrix_middle_bottom
+			shift: [-0.26kx,-1.5py]
+		key:
+			padding: 1ky
+			spread: 1kx
+			tags:
+				- key
+		columns:
+			mid:
+				rows.bottom.skip: true
+			index:
+				rows.bottom.skip: true
+				key:
+					spread: 1.1kx
+					splay: -1.5
+					
+					
+			inn:
+				rows.bottom.skip: true   
+				key:
+					spread: 1.1kx
+					splay: -1.5
+					
+				
+			layer:
+					key:
+						spread: 1.1kx
+						splay: -2
+						stagger: 0
+			space:
+					key:
+						spread: 1.1kx
+						splay: -5
+						stagger: -1  
+		rows:
+			mod:
+			bottom:
+			
 
   # viewport fix
   svg_viewport_fix1:
