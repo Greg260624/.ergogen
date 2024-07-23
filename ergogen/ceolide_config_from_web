@@ -1,0 +1,261 @@
+units:
+  # Proxy Spacing Variables
+  kx: u
+  ky: u
+  # Padding Variables
+  px: kx + 2
+  py: ky + 2
+  fillet_radius: 0.5
+points:
+  zones:
+    matrix:
+      key:
+        padding: ky
+        spread: kx
+        tags:
+          - key
+      anchor:
+        
+          shift: [100,-200]
+      columns:
+      # hide first 2 nums 
+        outer:
+          rows.num.skip: true
+        pinky:
+          rows.num.skip: true
+          key: 
+            stagger: 1
+            spread: 1.0kx
+        ring:
+          key: 
+            stagger: 0.5kx
+            spread: 1.0kx
+            splay: -2
+        middle:  
+          key:
+            splay: -2
+            stagger: 0.6kx
+            spread: 1.0kx
+        index:
+          key:
+              splay: -2
+              stagger: -0.4kx
+        inner:
+          key:
+              splay: -1
+              stagger: -0.25kx
+      rows:
+      # 4 main 2 partial
+        bottom:
+        home:
+        top:
+        num:
+    cluster:
+      anchor:
+        ref: matrix_middle_bottom
+        shift: [-0.26kx,-1.5py]
+      key:
+        padding: 1ky
+        spread: 1kx
+        tags:
+          - key
+      columns:
+        mid:
+          rows.bottom.skip: true
+        index:
+          rows.bottom.skip: true
+          key:
+            spread: 1.1kx
+            splay: -1.5
+            
+            
+        inn:
+          rows.bottom.skip: true   
+          key:
+            spread: 1.1kx
+            splay: -1.5
+            
+          
+        layer:
+            key:
+              spread: 1.1kx
+              splay: -2
+              stagger: 0
+        space:
+            key:
+              spread: 1.1kx
+              splay: -5
+              stagger: -1  
+      rows:
+        mod:
+        bottom:
+outlines:
+ # raw:
+  #  - what: rectangle
+   #   where: true
+  #    size: [px, py]
+  keys:
+  - what: rectangle
+    where: [key]
+    size: [u,u]
+    operation: stack
+  keycaps:
+  - what: rectangle
+    where: true
+    size: [18,18]
+    fillet: 0.5
+  nice_nano_pcb:
+    - what: rectangle
+      where: matrix_inner_top
+      size: [18,34]
+      adjust:
+        shift: [1px,0.5py]
+  board:
+  - what: polygon
+    operation: stack
+    points:
+        - ref: matrix_outer_top
+          shift: [-0.5px,0.55py]
+        - ref: matrix_pinky_top
+          shift: [-0.5px,0.5py]
+        - ref: matrix_pinky_top
+          shift: [0.5px,0.5py]
+        - ref: matrix_ring_num
+          shift: [-0.5px,0.5py]
+        - ref: matrix_ring_num
+          shift: [0.5px,0.5py]
+        - ref: matrix_middle_num
+          shift: [-0.5px,0.5py]
+        - ref: matrix_middle_num
+          shift: [0.5px,0.5py]
+        - ref: matrix_index_num
+          shift: [-0.5px,0.5py]
+        - ref: matrix_index_num
+          shift: [0.5px,0.5py]
+        - ref: matrix_inner_num
+          shift: [-0.45px,0.5py]
+        - ref: matrix_inner_num
+          shift: [0.5px,0.5py]
+        - ref: matrix_inner_num
+          shift: [1.6px,0.5py]
+        - ref: matrix_inner_home
+          shift: [1.6px,-0.4py]
+        - ref: cluster_space_bottom
+          shift: [0.5px,0.5py]
+        - ref: cluster_space_mod
+          shift: [0.5px,-0.5py]
+        - ref: cluster_layer_mod
+          shift: [0.5px,-0.5py]
+        - ref: cluster_layer_mod
+          shift: [-0.5px,-0.5py]
+        - ref: cluster_mid_mod
+          shift: [0.5px,-0.5py]
+        - ref: cluster_mid_mod
+          shift: [-0.5px,-0.5py]
+        - ref: cluster_mid_mod
+          shift: [-0.5px,-0.05py]
+        - ref: matrix_outer_bottom
+          shift: [-0.5px,-0.5py]
+    fillet: 2
+  _keys:
+    - what: rectangle
+      where: [key]
+      size: [14.4,14.4]
+      fillet: 0.5
+  plate:
+    - board
+    - -_keys
+  preview:
+    - what: outline
+      name: board
+    - what: rectangle
+      where: /key/
+      size: [6,0.01]
+      operation: stack
+    - what: rectangle
+      where: /key/
+      size: [0.01,4]
+      operation: stack
+    - what: rectangle
+      size: [u,u]
+      where: /key/
+      operation: stack
+    - what: outline
+      name: keycaps
+      operation: stack
+    - what: outline
+      name: nice_nano_pcb
+      operation: stack
+pcbs:
+  V1:
+    template: kicad8
+    outlines:
+      main:
+        outline: board
+      keys:
+        outline: keys
+        layer: Eco1.User
+      keycaps:
+        outline: keycaps
+        layer: Eco2.User
+    footprints:
+      hotswap:
+        what: mx
+        where: true
+        params:
+          keycaps: true
+          reverse: true
+          hotswap: true
+          from: "{{column_net}}"
+          to: "{{colrow}}"
+      diode:
+        what: diode
+        where: true
+        params:
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [0, -5]
+      mcu:
+        what: ceoloide/mcu_nice_nano
+        params:
+          designator: 'MCU'
+          side: 'F'
+          reversible: true
+          reverse_mount: false
+          include_traces: true
+          include_extra_pins: true
+          invert_jumpers_position: false
+          only_required_jumpers: false
+          use_rectangular_jumpers: false
+          show_instructions: true
+          show_silk_labels: true
+          show_silk_labels_on_both_sides: true
+          show_via_labels: true
+        where:
+          ref: matrix_inner_num
+
+          shift: [1px,0.5py]
+          rotate: 0 
+      trrs:
+        what: ceoloide/trrs_pj320a
+        params: 
+          designator: 'TRRS'
+          side: 'F'
+          reversible: true
+          symmetric: false
+
+      rotary_encoder_ec11_ec12_1:
+        what: ceoloide/rotary_encoder_ec11_ec12
+        where: 
+          ref: cluster_mid_mod
+        params:
+          reversible: true
+          include_momentary_switch_pads: true
+          include_plate_hole_marking: true
+          include_silkscreen: true
+          encoder_pads_position: 8.254
+          include_plated_mounting_holes: false
+          S1: "{{col.name}}"
+          S2: "{{colrow}}"
+         
